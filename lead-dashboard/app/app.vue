@@ -4,6 +4,8 @@ const search = ref('')
 const selectedScore = ref(0)
 const selectedTag = ref([])
 
+const sorting = ref([{ id: 'score', desc: true }])
+
 const columns = [{
   accessorKey: 'name',
   header: 'Analyzed profile',
@@ -39,7 +41,7 @@ const leads = computed(() => (data.value?.leads || []).map(lead => {
 }))
 
 const filteredLeads = computed(() => {
-  return leads.value.filter(lead => {
+  let result = leads.value.filter(lead => {
     const matchesSearch = !search.value ||
       lead.name.toLowerCase().includes(search.value.toLowerCase()) ||
       lead.phone.includes(search.value) ||
@@ -53,7 +55,30 @@ const filteredLeads = computed(() => {
 
     return matchesSearch && matchesScore && matchesTag
   })
+
+  // Apply sorting
+  if (sorting.value.length > 0) {
+    const sort = sorting.value[0]
+    result.sort((a, b) => {
+      let valA, valB
+      if (sort.id === 'score') {
+        valA = a.analysis.scores.role_fit
+        valB = b.analysis.scores.role_fit
+      } else {
+        // Fallback for other potential columns, though primarily sorting by score
+        valA = a[sort.id]
+        valB = b[sort.id]
+      }
+
+      if (valA < valB) return sort.desc ? 1 : -1
+      if (valA > valB) return sort.desc ? -1 : 1
+      return 0
+    })
+  }
+
+  return result
 })
+
 
 
 
@@ -153,7 +178,7 @@ const allTags = computed(() => {
         header: { padding: 'p-0' },
         body: { padding: 'p-0' }
       }">
-        <UTable :data="filteredLeads" :columns="columns" :loading="pending" :ui="{
+        <UTable v-model:sorting="sorting" :data="filteredLeads" :columns="columns" :loading="pending" :ui="{
           th: { base: 'uppercase text-xs font-bold text-gray-500 tracking-wider py-4 bg-gray-950/30' },
           td: { base: 'py-4 text-gray-300' },
           tr: { base: 'hover:bg-white/[0.02] transition-colors' }
