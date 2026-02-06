@@ -1,0 +1,28 @@
+{
+   "action": {
+      "default_icon": {
+         "128": "images/precise_lab_logo_2.png",
+         "16": "images/precise_lab_logo_2.png",
+         "48": "images/precise_lab_logo_2.png"
+      },
+      "default_popup": "popup.html"
+   },
+   "background": {
+      "service_worker": "background.js"
+   },
+   "description": "A Google Chrome extension to easily scrape phone numbers from group chats in WhatsApp Web.",
+   "icons": {
+      "128": "images/precise_lab_logo_2.png",
+      "16": "images/precise_lab_logo_2.png",
+      "48": "images/precise_lab_logo_2.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqYykbVJbI5Xsl6UAPsatj0IL5n9Mfn4V5F1D9EBBZbsgWrtixm8OXJUNrkL+kVtieV3DV0F7mEDS8K4Ev2O82DJBvfb5GQ+h4L7/kTxQt19PubpTqHem3znjDjJUnFrI5eLKwcyupAZkeIfkU1OmVA/IW7/5pWHmMeK6PxHRwBsLe7moWxcJy/2wZNCEOfQlasRJmVF9sLp6iEJX6xkq0iqJDEJvmjjnnm6lNZGo0/Cici78He/B0dY+Oun4djBvfNPF4SBujbXX0HxA9CoUf7LQhhBDTSgQczT0b6kY1XexMn/xN+2VXPhBdEjohAApx25iEuHo1Me2vA8xuIKcJwIDAQAB",
+   "manifest_version": 3,
+   "name": "WhatsApp Web Scraper by Precise Lab",
+   "permissions": [
+      "activeTab",
+      "scripting"
+   ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0"
+}
