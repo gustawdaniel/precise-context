@@ -4,7 +4,7 @@
 
 > **Works with WhatsApp**
 
-![Project Banner](whatsapp-extension/images/precise_lab_logo.svg)
+![Screencast](branding_book/precise-context-whatsapp.gif)
 
 ## 🚀 Key Features
 
@@ -94,4 +94,6 @@
 
 ---
 
-*Built with ❤️ by Precise Lab.*
+*Built with ❤️ by [Precise Lab](https://preciselab.space).*
+
+![Logo](whatsapp-extension/images/precise_lab_logo.svg)
