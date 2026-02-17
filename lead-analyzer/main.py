@@ -165,7 +165,7 @@ def main():
 
     # Load Data
     files = os.listdir(INPUT_DIR)
-    member_files = [f for f in files if 'whatsAppExport' in f and f.endswith('.json')]
+    member_files = [f for f in files if 'whatsAppMembers' in f and f.endswith('.json')]
     message_files = [f for f in files if 'whatsAppMessages' in f and f.endswith('.json')]
     
     if not member_files or not message_files:

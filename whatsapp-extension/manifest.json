@@ -10,7 +10,7 @@
    "background": {
       "service_worker": "background.js"
    },
-   "description": "A Google Chrome extension to easily scrape phone numbers from group chats in WhatsApp Web.",
+   "description": "Extracts members and conversation history from WhatsApp groups for deep AI analysis and lead enrichment.",
    "icons": {
       "128": "images/precise_lab_logo_2.png",
       "16": "images/precise_lab_logo_2.png",

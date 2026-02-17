@@ -32,7 +32,7 @@
 
 1.  Open Chrome and navigate to `chrome://extensions`.
 2.  Enable **Developer Mode** (top right).
-3.  Click **Load unpacked** and select the `whatsapp-scraper-extension` folder.
+3.  Click **Load unpacked** and select the `whatsapp-extension` folder.
 4.  Open WhatsApp Web and navigate to a target group chat.
 5.  Click the extension icon to export:
     *   `whatsAppMembers.json`: Member details.

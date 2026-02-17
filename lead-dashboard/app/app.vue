@@ -1,5 +1,8 @@
 <script setup>
 const { data, pending, error, refresh } = await useFetch('/api/leads')
+const colorMode = useColorMode()
+colorMode.preference = 'dark'
+
 const search = ref('')
 const selectedScore = ref(0)
 const selectedTag = ref([])
@@ -190,7 +193,7 @@ const allTags = computed(() => {
           <template #name-cell="{ row }">
             <div class="flex flex-col cursor-pointer group max-w-[500px]" @click="openDetails(row.original)">
               <span class="font-semibold text-white group-hover:text-primary-400 transition-colors">{{ row.original.name
-              }}</span>
+                }}</span>
               <div class="flex items-center gap-2 mt-1">
                 <span class="text-xs text-gray-500 font-mono bg-gray-950 px-1.5 rounded">{{ row.original.phone }}</span>
               </div>

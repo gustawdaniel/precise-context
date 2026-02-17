@@ -251,7 +251,7 @@ class MessageStorage extends ListStorage {
     itemToRow(e) { return [e.sender || "", e.time || "", e.message || "", e.type || ""] }
 }
 
-const memberListStore = new WhatsAppStorage({ name: "whatsapp-scraper" }), messageListStore = new MessageStorage({ name: "whatsapp-message-scraper" }), counterId = "scraper-number-tracker", messageCounterId = "scraper-message-tracker", exportName = "whatsAppExport", messageExportName = "whatsAppMessages"; let logsTracker;
+const memberListStore = new WhatsAppStorage({ name: "whatsapp-scraper" }), messageListStore = new MessageStorage({ name: "whatsapp-message-scraper" }), counterId = "scraper-number-tracker", messageCounterId = "scraper-message-tracker", exportName = "whatsAppMembers", messageExportName = "whatsAppMessages"; let logsTracker;
 
 async function updateConter() {
     const e = document.getElementById(counterId);
