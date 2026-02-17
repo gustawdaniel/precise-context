@@ -9,16 +9,20 @@ const sorting = ref([{ id: 'score', desc: true }])
 const columns = [{
   accessorKey: 'name',
   header: 'Analyzed profile',
+  class: 'w-[280px] min-w-[280px]', // Constrain width
 }, {
   accessorKey: 'score',
   header: 'Score',
   sortable: true,
+  class: 'w-[120px]',
 }, {
   accessorKey: 'tags',
   header: 'Tags',
+  class: 'w-auto min-w-[200px]', // Allow tags to take remaining space
 }, {
   id: 'action',
   header: 'Actions',
+  class: 'w-[100px]',
 }]
 
 const leads = computed(() => (data.value?.leads || []).map(lead => {
@@ -182,15 +186,16 @@ const allTags = computed(() => {
           th: { base: 'uppercase text-xs font-bold text-gray-500 tracking-wider py-4 bg-gray-950/30' },
           td: { base: 'py-4 text-gray-300' },
           tr: { base: 'hover:bg-white/[0.02] transition-colors' }
-        }">
+        }" sticky class="h-96">
           <template #name-cell="{ row }">
-            <div class="flex flex-col cursor-pointer group" @click="openDetails(row.original)">
+            <div class="flex flex-col cursor-pointer group max-w-[500px]" @click="openDetails(row.original)">
               <span class="font-semibold text-white group-hover:text-primary-400 transition-colors">{{ row.original.name
-              }}</span>
+                }}</span>
               <div class="flex items-center gap-2 mt-1">
                 <span class="text-xs text-gray-500 font-mono bg-gray-950 px-1.5 rounded">{{ row.original.phone }}</span>
               </div>
-              <p class="text-sm text-gray-400 mt-2 line-clamp-1 italic border-l-2 border-primary-500/30 pl-2">
+              <p class="text-sm text-gray-400 mt-2 whitespace-normal italic border-l-2 border-primary-500/30 pl-2">
+
                 {{ row.original.analysis.qualitative.role_description }}
               </p>
             </div>
@@ -226,9 +231,9 @@ const allTags = computed(() => {
             <div class="flex gap-2 justify-end pr-4">
               <UButton color="gray" variant="ghost" icon="i-heroicons-eye-20-solid"
                 class="hover:bg-primary-500/10 hover:text-primary-400" @click="openDetails(row.original)" />
-              <UButton color="gray" variant="ghost" icon="i-heroicons-clipboard-document-20-solid"
+              <!-- <UButton color="gray" variant="ghost" icon="i-heroicons-clipboard-document-20-solid"
                 class="hover:bg-emerald-500/10 hover:text-emerald-400"
-                @click="copyReply(row.original.analysis.engaging_reply)" />
+                @click="copyReply(row.original.analysis.engaging_reply)" /> -->
             </div>
           </template>
 
@@ -237,113 +242,118 @@ const allTags = computed(() => {
     </div>
 
     <!-- Details Slideover -->
-    <USlideover v-model="isOpen"
+    <USlideover v-model:open="isOpen"
       :ui="{ width: 'max-w-xl', background: 'bg-gray-900', overlay: { background: 'backdrop-blur-sm' } }">
-      <div class="flex flex-col h-full bg-gray-900 border-l border-white/10" v-if="selectedLead">
+      <template #content>
 
-        <!-- Header -->
-        <div class="p-6 border-b border-white/5 bg-gray-900 sticky top-0 z-20">
-          <div class="flex justify-between items-start">
-            <div>
-              <h2 class="text-2xl font-bold text-white tracking-tight">{{ selectedLead.name }}</h2>
-              <div class="text-gray-400 font-mono text-sm mt-1">{{ selectedLead.phone }}</div>
-            </div>
-            <UButton icon="i-heroicons-x-mark-20-solid" color="gray" variant="ghost" @click="isOpen = false" />
-          </div>
-        </div>
+        <div class="flex flex-col h-full bg-gray-900 border-l border-white/10" v-if="selectedLead">
 
-        <div class="p-6 flex-1 overflow-y-auto space-y-8">
-          <!-- Scores Grid -->
-          <div class="grid grid-cols-3 gap-4">
-            <div class="bg-gray-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center">
-              <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Role Fit</div>
-              <div
-                class="text-3xl font-bold bg-gradient-to-br from-primary-400 to-primary-600 bg-clip-text text-transparent">
-                {{ selectedLead.analysis.scores.role_fit }}%</div>
-            </div>
-            <div class="bg-gray-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center">
-              <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Engagement</div>
-              <div class="text-3xl font-bold text-blue-400">{{ selectedLead.analysis.scores.engagement }}%</div>
-            </div>
-            <div class="bg-gray-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center">
-              <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Tech Needs</div>
-              <div class="text-3xl font-bold text-emerald-400">{{ selectedLead.analysis.scores.technical_needs }}%</div>
+          <!-- Header -->
+          <div class="p-6 border-b border-white/5 bg-gray-900 sticky top-0 z-20">
+            <div class="flex justify-between items-start">
+              <div>
+                <h2 class="text-2xl font-bold text-white tracking-tight">{{ selectedLead.name }}</h2>
+                <div class="text-gray-400 font-mono text-sm mt-1">{{ selectedLead.phone }}</div>
+              </div>
+              <UButton icon="i-heroicons-x-mark-20-solid" color="gray" variant="ghost" @click="isOpen = false" />
             </div>
           </div>
 
-          <!-- Profile Cards -->
-          <div class="space-y-4">
-            <div class="bg-gray-800/20 p-5 rounded-2xl border border-white/5">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <UIcon name="i-heroicons-user-20-solid" /> Role Description
-              </h3>
-              <p class="text-gray-300 leading-relaxed">{{ selectedLead.analysis.qualitative.role_description }}</p>
+          <div class="p-6 flex-1 overflow-y-auto space-y-8">
+            <!-- Scores Grid -->
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-gray-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center">
+                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Role Fit</div>
+                <div
+                  class="text-3xl font-bold bg-gradient-to-br from-primary-400 to-primary-600 bg-clip-text text-transparent">
+                  {{ selectedLead.analysis.scores.role_fit }}%</div>
+              </div>
+              <div class="bg-gray-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center">
+                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Engagement</div>
+                <div class="text-3xl font-bold text-blue-400">{{ selectedLead.analysis.scores.engagement }}%</div>
+              </div>
+              <div class="bg-gray-950/50 p-4 rounded-xl border border-white/5 flex flex-col items-center">
+                <div class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Tech Needs</div>
+                <div class="text-3xl font-bold text-emerald-400">{{ selectedLead.analysis.scores.technical_needs }}%
+                </div>
+              </div>
             </div>
 
-            <div class="bg-gray-800/20 p-5 rounded-2xl border border-white/5">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <UIcon name="i-heroicons-sparkles-20-solid" /> Personality
-              </h3>
-              <p class="text-gray-300 leading-relaxed">{{ selectedLead.analysis.qualitative.personality_profile }}
-              </p>
-            </div>
-
-            <div class="bg-gray-800/20 p-5 rounded-2xl border border-white/5">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <UIcon name="i-heroicons-key-20-solid" /> Key Info
-              </h3>
-              <p class="text-gray-300 leading-relaxed">{{ selectedLead.analysis.qualitative.key_information }}</p>
-            </div>
-          </div>
-
-          <!-- Draft Reply -->
-          <div class="relative group">
-            <div
-              class="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-indigo-500 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur">
-            </div>
-            <div class="relative bg-gray-900 border border-white/10 p-5 rounded-2xl">
-              <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xs font-bold text-primary-400 uppercase tracking-widest flex items-center gap-2">
-                  <UIcon name="i-heroicons-chat-bubble-left-right-20-solid" /> Suggested Reply
+            <!-- Profile Cards -->
+            <div class="space-y-4">
+              <div class="bg-gray-800/20 p-5 rounded-2xl border border-white/5">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                  <UIcon name="i-heroicons-user-20-solid" /> Role Description
                 </h3>
-                <UButton size="xs" icon="i-heroicons-clipboard-document-20-solid" variant="soft" color="primary"
-                  @click="copyReply(selectedLead.analysis.engaging_reply)">Copy</UButton>
+                <p class="text-gray-300 leading-relaxed">{{ selectedLead.analysis.qualitative.role_description }}</p>
               </div>
-              <div class="text-lg text-white font-medium italic font-serif leading-relaxed">
-                "{{ selectedLead.analysis.engaging_reply }}"
+
+              <div class="bg-gray-800/20 p-5 rounded-2xl border border-white/5">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                  <UIcon name="i-heroicons-sparkles-20-solid" /> Personality
+                </h3>
+                <p class="text-gray-300 leading-relaxed">{{ selectedLead.analysis.qualitative.personality_profile }}
+                </p>
+              </div>
+
+              <div class="bg-gray-800/20 p-5 rounded-2xl border border-white/5">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                  <UIcon name="i-heroicons-key-20-solid" /> Key Info
+                </h3>
+                <p class="text-gray-300 leading-relaxed">{{ selectedLead.analysis.qualitative.key_information }}</p>
+              </div>
+            </div>
+
+            <!-- Draft Reply -->
+            <div class="relative group">
+              <div
+                class="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-indigo-500 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur">
+              </div>
+              <div class="relative bg-gray-900 border border-white/10 p-5 rounded-2xl">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-xs font-bold text-primary-400 uppercase tracking-widest flex items-center gap-2">
+                    <UIcon name="i-heroicons-chat-bubble-left-right-20-solid" /> Suggested Reply
+                  </h3>
+                  <UButton size="xs" icon="i-heroicons-clipboard-document-20-solid" variant="soft" color="primary"
+                    @click="copyReply(selectedLead.analysis.engaging_reply)">Copy</UButton>
+                </div>
+                <div class="text-lg text-white font-medium italic font-serif leading-relaxed">
+                  "{{ selectedLead.analysis.engaging_reply }}"
+                </div>
+              </div>
+            </div>
+
+            <!-- Messages -->
+            <div>
+              <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">Chat History</h3>
+              <div
+                class="space-y-6 relative before:absolute before:inset-y-0 before:left-4 before:w-px before:bg-white/5">
+                <div v-for="(msg, index) in selectedLead.messages" :key="index" class="relative pl-12 group">
+                  <!-- Timeline dot -->
+                  <div class="absolute left-[13px] top-3 w-2.5 h-2.5 rounded-full border-2 border-gray-900"
+                    :class="msg.type === 'out' ? 'bg-primary-500' : 'bg-gray-600'"></div>
+
+                  <div class="mb-1 flex items-center gap-2">
+                    <span class="text-xs font-bold" :class="msg.type === 'out' ? 'text-primary-400' : 'text-gray-300'">
+                      {{ msg.type === 'out' ? 'You' : selectedLead.name }}
+                    </span>
+                    <span class="text-[10px] text-gray-600">
+                      {{ new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
+                    </span>
+                  </div>
+
+                  <div class="p-3 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl text-sm leading-relaxed"
+                    :class="msg.type === 'out' ? 'bg-primary-500/10 text-primary-100' : 'bg-gray-800 text-gray-300'">
+                    {{ msg.message }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Messages -->
-          <div>
-            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">Chat History</h3>
-            <div
-              class="space-y-6 relative before:absolute before:inset-y-0 before:left-4 before:w-px before:bg-white/5">
-              <div v-for="(msg, index) in selectedLead.messages" :key="index" class="relative pl-12 group">
-                <!-- Timeline dot -->
-                <div class="absolute left-[13px] top-3 w-2.5 h-2.5 rounded-full border-2 border-gray-900"
-                  :class="msg.type === 'out' ? 'bg-primary-500' : 'bg-gray-600'"></div>
-
-                <div class="mb-1 flex items-center gap-2">
-                  <span class="text-xs font-bold" :class="msg.type === 'out' ? 'text-primary-400' : 'text-gray-300'">
-                    {{ msg.type === 'out' ? 'You' : selectedLead.name }}
-                  </span>
-                  <span class="text-[10px] text-gray-600">
-                    {{ new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
-                  </span>
-                </div>
-
-                <div class="p-3 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl text-sm leading-relaxed"
-                  :class="msg.type === 'out' ? 'bg-primary-500/10 text-primary-100' : 'bg-gray-800 text-gray-300'">
-                  {{ msg.message }}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-      </div>
+      </template>
     </USlideover>
 
   </div>

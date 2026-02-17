@@ -24,9 +24,11 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 
 # Configuration
-INPUT_DIR = 'input'
-OUTPUT_DIR = 'output'
-PRODUCT_FILE = 'product.md'
+# Configuration
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INPUT_DIR = os.path.join(BASE_DIR, 'input')
+OUTPUT_DIR = os.path.join(BASE_DIR, 'output')
+PRODUCT_FILE = os.path.join(BASE_DIR, 'product.md')
 ANALYSIS_VERSION = 2  # Increment this to force re-analysis of existing leads
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'leads_analyzed.jsonl')
 
@@ -65,6 +67,9 @@ def load_json(filepath):
 def normalize_phone(phone):
     if not phone:
         return None
+    # Keep it simple: remove spaces, dashes, parens. 
+    # If duplicates persist due to + prefix, consider keeping or removing it consistently.
+    # Current behavior: +48 123 -> +48123
     return re.sub(r'[\s\-()]+', '', phone)
 
 def load_product_description():
@@ -74,31 +79,52 @@ def load_product_description():
     except FileNotFoundError:
         return "Product description unavailable."
 
-def load_progress() -> Dict[str, int]:
+def consolidate_database() -> Dict[str, int]:
     """
-    Loads existing progress from the JSONL output file.
-    Returns a dict mapping phone_number -> processed_version
+    Reads the entire JSONL output, deduplicates by phone (last write wins),
+    rewrites the file if duplicates were found, and returns the progress map.
     """
-    progress = {}
     if not os.path.exists(OUTPUT_FILE):
-        return progress
+        return {}
+    
+    unique_data = {}
+    total_lines = 0
     
     try:
         with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
                 if not line: continue
+                total_lines += 1
                 try:
                     data = json.loads(line)
                     phone = data.get('phone')
-                    version = data.get('_analysis_version', 0)
                     if phone:
-                        progress[phone] = version
+                        # Overwrite with latest version
+                        unique_data[phone] = data
                 except json.JSONDecodeError:
                     continue
     except Exception as e:
-        print(f"Error loading progress: {e}")
+        print(f"Error reading database: {e}")
+        return {}
+
+    # Check for duplicates
+    if len(unique_data) < total_lines:
+        print(f"  -> Found {total_lines - len(unique_data)} duplicate entries. Consolidating database...")
+        # Rewrite the file
+        try:
+            with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+                for data in unique_data.values():
+                    f.write(json.dumps(data, ensure_ascii=False) + '\n')
+            print("  -> Database consolidated successfully.")
+        except Exception as e:
+            print(f"  -> Error rewriting database: {e}")
     
+    # Return progress map based on unique data
+    progress = {}
+    for phone, data in unique_data.items():
+        progress[phone] = data.get('_analysis_version', 0)
+        
     return progress
 
 def save_result(result: Dict[str, Any]):
@@ -168,7 +194,7 @@ def main():
         msg_by_sender[norm_sender].append(msg)
         
     # Load Progress
-    progress_map = load_progress()
+    progress_map = consolidate_database()
     
     # Prepare list to process
     to_process = []
