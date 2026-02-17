@@ -1,6 +1,6 @@
-# Product: Protocol Cloud
+# Product: Precise Context
 
-**Protocol Cloud** is an advanced cold outreach tool designed to extract meaningful data about leads from various conversation sources, such as WhatsApp and LinkedIn.
+**Precise Context** is an advanced cold outreach tool designed to extract meaningful data about leads from various conversation sources, such as WhatsApp and LinkedIn.
 
 ## Core Value Proposition
 *   **Data Extraction**: Automatically parses conversation history to identify potential leads.

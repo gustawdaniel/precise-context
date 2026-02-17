@@ -124,7 +124,7 @@ const allTags = computed(() => {
             <span class="text-white font-bold text-lg">P</span>
           </div>
           <div>
-            <h1 class="text-lg font-semibold text-white tracking-tight">Protocol Cloud</h1>
+            <h1 class="text-lg font-semibold text-white tracking-tight">Precise Context</h1>
             <div class="flex items-center gap-2">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               <span class="text-xs text-gray-400 font-medium tracking-wide">LIVE DASHBOARD</span>
@@ -190,7 +190,7 @@ const allTags = computed(() => {
           <template #name-cell="{ row }">
             <div class="flex flex-col cursor-pointer group max-w-[500px]" @click="openDetails(row.original)">
               <span class="font-semibold text-white group-hover:text-primary-400 transition-colors">{{ row.original.name
-                }}</span>
+              }}</span>
               <div class="flex items-center gap-2 mt-1">
                 <span class="text-xs text-gray-500 font-mono bg-gray-950 px-1.5 rounded">{{ row.original.phone }}</span>
               </div>
