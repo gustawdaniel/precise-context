@@ -4,7 +4,7 @@
 
 > **Works with WhatsApp**
 
-![Project Banner](whatsapp-scraper-extension/images/precise_lab_logo.svg)
+![Project Banner](whatsapp-extension/images/precise_lab_logo.svg)
 
 ## 🚀 Key Features
 
