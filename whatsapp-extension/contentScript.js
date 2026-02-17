@@ -457,7 +457,61 @@ function stopListeningMainScanChanges() {
 }
 
 let modalObserver;
-function listenModalChanges() { var e = document.querySelectorAll("header span[style*='height']:not(.copyable-text)"); let s; 1 == e.length && (s = e[0].textContent); const t = document.querySelectorAll('[data-animate-modal-body="true"]')[0]; e = t.querySelectorAll("div[style*='height']")[1]; (modalObserver = new MutationObserver(e => { for (const t of e) if ("childList" === t.type) { if (0 < t.addedNodes.length) { const n = t.addedNodes[0].textContent; if (n) { const r = n.trim(); 0 < r.length && (r.match(/Loading About/i) || r.match(/I am using WhatsApp/i) || r.match(/Available/i)) } } } else if ("attributes" === t.type) { const o = t.target, i = o.tagName; if (-1 !== ["div"].indexOf(i.toLowerCase()) && "listitem" === o.getAttribute("role")) { const a = o; window.setTimeout(async () => { let e = "", t = "", n = ""; var r = a.querySelectorAll("span[title]:not(.copyable-text)"); if (0 < r.length && (!(r = r[0].textContent) || (r = cleanName(r)) && 0 < r.length && (e = r)), 0 !== e.length) { var r = a.querySelectorAll("span[title].copyable-text"), r = (0 < r.length && (!(r = r[0].textContent) || (r = cleanDescription(r)) && 0 < r.length && (t = r)), a.querySelectorAll("span[style*='height']:not([title])")); if (0 < r.length) { const o = r[0].textContent; !o || (r = o.trim()) && 0 < r.length && (n = r) } if (e) { r = n || e; console.log(r); const i = {}; s && (i.source = s), t && (i.description = t), n ? (i.phoneNumber = n, e && (i.name = e)) : e && (i.phoneNumber = e), await memberListStore.addElem(r, { profileId: r, ...i }, !0), logsTracker.addHistoryLog({ label: "Scraping " + e, category: LogCategory.LOG }), updateConter() } } }, 10) } } })).observe(e, { attributes: !0, childList: !0, subtree: !0 }) }
+function listenModalChanges() {
+    var e = document.querySelectorAll("header span[style*='height']:not(.copyable-text)");
+    let s;
+    if (1 == e.length) s = e[0].textContent;
+
+    const t = document.querySelectorAll('[data-animate-modal-body="true"]')[0];
+    if (!t) {
+        console.warn("Modal body not found");
+        return;
+    }
+
+    e = t.querySelectorAll("div[style*='height']")[1];
+    if (!e) {
+        console.warn("Modal target element not found");
+        return;
+    }
+
+    modalObserver = new MutationObserver(e => {
+        for (const t of e) {
+            if ("childList" === t.type) {
+                if (0 < t.addedNodes.length) {
+                    const n = t.addedNodes[0].textContent;
+                    if (n) {
+                        const r = n.trim();
+                        0 < r.length && (r.match(/Loading About/i) || r.match(/I am using WhatsApp/i) || r.match(/Available/i))
+                    }
+                }
+            } else if ("attributes" === t.type) {
+                const o = t.target, i = o.tagName;
+                if (-1 !== ["div"].indexOf(i.toLowerCase()) && "listitem" === o.getAttribute("role")) {
+                    const a = o;
+                    window.setTimeout(async () => {
+                        let e = "", t = "", n = "";
+                        var r = a.querySelectorAll("span[title]:not(.copyable-text)");
+                        if (0 < r.length && (!(r = r[0].textContent) || (r = cleanName(r)) && 0 < r.length && (e = r)), 0 !== e.length) {
+                            var r = a.querySelectorAll("span[title].copyable-text"), r = (0 < r.length && (!(r = r[0].textContent) || (r = cleanDescription(r)) && 0 < r.length && (t = r)), a.querySelectorAll("span[style*='height']:not([title])"));
+                            if (0 < r.length) {
+                                const o = r[0].textContent;
+                                !o || (r = o.trim()) && 0 < r.length && (n = r)
+                            }
+                            if (e) {
+                                r = n || e;
+                                console.log(r);
+                                const i = {};
+                                s && (i.source = s), t && (i.description = t), n ? (i.phoneNumber = n, e && (i.name = e)) : e && (i.phoneNumber = e), await memberListStore.addElem(r, { profileId: r, ...i }, !0), logsTracker.addHistoryLog({ label: "Scraping " + e, category: LogCategory.LOG }), updateConter()
+                            }
+                        }
+                    }, 10)
+                }
+            }
+        }
+    });
+
+    modalObserver.observe(e, { attributes: !0, childList: !0, subtree: !0 });
+}
 
 function stopListeningModalChanges() { modalObserver && modalObserver.disconnect() }
 
