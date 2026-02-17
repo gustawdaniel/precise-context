@@ -92,6 +92,13 @@
 *   No data is sent to third-party servers from the extension.
 *   **Disclaimer**: This tool is for educational and legitimate business purposes only. Respect WhatsApp's Terms of Service and user privacy.
 
+## Responsible Use
+
+*   User is responsible for compliance with platform terms.
+*   Tool processes data locally.
+*   Intended for personal analysis of data you have lawful access to.
+*   Do not use for spam, harassment, or mass outreach.
+
 ---
 
 *Built with ❤️ by [Precise Lab](https://preciselab.space).*
